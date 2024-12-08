@@ -16,7 +16,7 @@ export default function AnalysisHistory({ items }: AnalysisHistoryProps) {
       </div>
       
       <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4 max-w-full">
+        <div className="space-y-4 pr-4 max-w-4xl mx-auto">
           {items.length === 0 ? (
             <div className="text-gray-500 text-center p-4">
               No analysis results yet. Try asking a question about your data!
@@ -25,36 +25,40 @@ export default function AnalysisHistory({ items }: AnalysisHistoryProps) {
             items.map((item, index) => (
               <Card key={index} className="p-4 bg-white shadow-sm w-full">
                 {item.file_type === 'figure' && (
-                  <div className="max-w-full overflow-hidden">
-                    <img
-                      src={`http://localhost:5005/api/analysis/file/${item.file_name}`}
-                      alt="Analysis Figure"
-                      className="w-full h-auto rounded-lg"
-                      onError={(e) => {
-                        console.error('Error loading image:', e);
-                        console.log('Failed image path:', e.currentTarget.src);
-                      }}
-                    />
+                  <div className="w-full overflow-x-auto">
+                    <div className="inline-block min-w-min">
+                      <img
+                        src={`http://localhost:5005/api/analysis/file/${item.file_name}`}
+                        alt="Analysis Figure"
+                        className="h-auto rounded-lg"
+                      />
+                    </div>
                   </div>
                 )}
                 
                 {item.file_type === 'table' && (
                   <div 
-                    className="max-w-full overflow-x-auto"
+                    className="w-full overflow-x-auto"
+                    style={{ maxWidth: 'calc(100% - 2rem)' }}
                     dangerouslySetInnerHTML={{ __html: item.content || '' }}
                   />
                 )}
                 
                 {item.file_type === 'thought' && (
-                  <div className="prose max-w-none">
+                  <div 
+                    className="prose w-full overflow-x-auto"
+                    style={{ maxWidth: 'calc(100% - 2rem)' }}
+                  >
                     {item.content}
                   </div>
                 )}
                 
                 {item.file_type === 'code' && (
-                  <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm max-w-full">
-                    <code className="whitespace-pre-wrap break-all">{item.content}</code>
-                  </pre>
+                  <div className="w-full overflow-x-auto" style={{ maxWidth: 'calc(100% - 2rem)' }}>
+                    <pre className="bg-gray-100 p-4 rounded-lg text-sm whitespace-pre inline-block min-w-min">
+                      <code>{item.content}</code>
+                    </pre>
+                  </div>
                 )}
               </Card>
             ))
